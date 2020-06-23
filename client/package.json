@@ -1,17 +1,29 @@
 {
-  "name": "mevn-starter",
+  "name": "fubok-vue",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit",
+    "postinstall": "if test \"$NODE_ENV\" = \"production\" ; then npm run build ; fi ",
+    "start": "node server.js",
+    "preinstall": "npm install --save express serve-static"
   },
   "dependencies": {
+    "3": "^2.1.0",
+    "-": "0.0.1",
+    "bootstrap": "^4.5.0",
+    "bootstrap-vue": "^2.15.0",
     "core-js": "^2.6.5",
-    "vue": "^2.6.10",
-    "vue-router": "^3.0.3"
+    "express": "^4.17.1",
+    "jquery": "^1.9.1",
+    "serve-static": "^1.14.1",
+    "vue": "^2.6.11",
+    "vue-router": "^3.0.3",
+    "vue-telegram-login": "^2.1.0",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
