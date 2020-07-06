@@ -1,37 +1,29 @@
 import mongoose from 'mongoose';
-// import passportLocalMongoose from 'passport-local-mongoose';
 
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Name is required'],
-  },
-});
-
-const promotionSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Name is required'],
-  },
-}); 
-
-/* let userAuth = new mongoose.Schema({
+let memberInfoSchema = new mongoose.Schema({
   email: String,
   username: String,
   password: String,
-  oauthID: Number,
-}); */
+  clubInfo: Object,
+}, { collection: 'MemberInfo' }); 
 
-// userAuth.plugin(passportLocalMongoose);
+memberInfoSchema.statics.findOrCreate = function findOneOrCreate(condition, doc, callback) {
+  const self = this;
+  self.find(condition, (err, result) => {
+    if( result.length == 0 ) {
+      //new user
+      self.create(doc, (err, result) => {
+        return callback(err, result);
+      });
+    } else {
+      //user already exist
+      return callback(err, null);
+    }
+  });
+};
 
-let User = mongoose.model('userModel', userSchema);
-let Promotion = mongoose.model('promotionModel', promotionSchema);
-// let UserAuth = mongoose.model('userAuthModel', userAuth);
+let MemberInfo = mongoose.model('MemberInfo', memberInfoSchema);
 
 Object.assign(exports, {
-  User,
-  Promotion
-  // UserAuth,
+  MemberInfo
 });

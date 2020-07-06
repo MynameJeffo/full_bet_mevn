@@ -2,7 +2,7 @@
 
 import { MemberInfo } from '../models/user_schema';
 
-let addClubInfoForMember = (req, res, next) => {
+let createData = (req, res, next) => {
   MemberInfo.create(req.body).then(err => {
     if (err) {
       return next(err);
@@ -11,16 +11,16 @@ let addClubInfoForMember = (req, res, next) => {
   });
 };
 
-let getAllMemberInfo = (req, res, next) => {
-  MemberInfo.find({}, '', (err, memberInfo) => {
+let readData = (req, res, next) => {
+  MemberInfo.find({}, '', (err, user) => {
     if (err) {
       return next(err);
     }
-    res.send(memberInfo);
+    res.send(user);
   });
 };
 
-let updateClubInfo = (req, res, next) => {
+let updateData = (req, res, next) => {
   MemberInfo.findByIdAndUpdate(req.params.id, { $set: req.body }, (err, user) => {
     if (err) {
       return next(err);
@@ -29,7 +29,7 @@ let updateClubInfo = (req, res, next) => {
   });
 };
 
-let deleteClubInfo = (req, res, next) => {
+let deleteData = (req, res, next) => {
   MemberInfo.findByIdAndRemove(req.params.id, err => {
     if (err) {
       return next(err);
@@ -39,8 +39,8 @@ let deleteClubInfo = (req, res, next) => {
 };
 
 module.exports = {
-  addClubInfoForMember,
-  getAllMemberInfo,
-  updateClubInfo,
-  deleteClubInfo
+  createData,
+  readData,
+  updateData,
+  deleteData,
 };

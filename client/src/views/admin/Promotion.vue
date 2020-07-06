@@ -1,17 +1,52 @@
 <template>
   <div id="app">
-    <h3 class="title">Club Member Information</h3>
+    <center><h3 class="title col-4">Promotion Admin</h3></center>
+    <b-button
+      @click="dtCreateClick()"
+      class="create-member-info float-right"
+      variant="success"
+      >Add new</b-button
+    >
+    <br />
+    <br />
     <DataTable
-      id="memberInfo-table"
+      id="promotionInfo-table"
       :header-fields="headerFields"
       :sort-field="sortField"
       :sort="sort"
-      :data="fetchedData || []"
+      :data="data || []"
       :is-loading="isLoading"
       :css="datatableCss"
       not-found-msg="Items not found"
-      trackBy="clubName"
+      @onUpdate="dtUpdateSort"
+      trackBy="firstName"
     >
+      <input
+        slot="actions"
+        slot-scope="props"
+        type="button"
+        class="btn btn-info"
+        value="Edit"
+        @click="dtEditClick(props)"
+      />
+      <!-- <Pagination
+        slot="pagination"
+        :page="currentPage"
+        :total-items="totalItems"
+        :items-per-page="itemsPerPage"
+        :css="paginationCss"
+        @onUpdate="changePage"
+        @updateCurrentPage="updateCurrentPage"
+      /> -->
+      <!-- <div class="items-per-page" slot="ItemsPerPage">
+        <label>Items per page</label>
+        <ItemsPerPageDropdown
+          :list-items-per-page="listItemsPerPage"
+          :items-per-page="itemsPerPage"
+          :css="itemsPerPageCss"
+          @onUpdate="updateItemsPerPage"
+        />
+      </div> -->
       <Spinner slot="spinner" />
     </DataTable>
   </div>
@@ -26,7 +61,7 @@
 }
 
 #app .title {
-  margin-top: 4vh;
+  margin-bottom: 30px;
 }
 
 #app .items-per-page {
@@ -40,10 +75,10 @@
   margin: 0 15px;
 }
 
-#memberInfo-table {
-  width: 70vw;
+#promotionInfo-table {
+  width: 85vw;
   float: left;
-  margin-left: 15vw;
+  margin-left: 8vw;
 }
 
 /* Datatable CSS */
@@ -116,28 +151,94 @@
   width: 500px;
 }
 /* End Datatable CSS */
+
+/* Pagination CSS */
+#v-datatable-light-pagination {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  height: 30px;
+}
+
+#v-datatable-light-pagination .pagination-item {
+  width: 30px;
+  margin-right: 5px;
+  font-size: 16px;
+  transition: color 0.15s ease-in-out;
+}
+
+#v-datatable-light-pagination .pagination-item.selected {
+  color: #ed9b19;
+}
+
+#v-datatable-light-pagination .pagination-item .page-btn {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: #337ab7;
+  transition: color 0.15s ease-in-out;
+}
+
+#v-datatable-light-pagination .pagination-item .page-btn:hover {
+  color: #ed9b19;
+}
+
+#v-datatable-light-pagination .pagination-item .page-btn:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.65;
+}
+/* END PAGINATION CSS */
+
+/* ITEMS PER PAGE DROPDOWN CSS */
+.item-per-page-dropdown {
+  background-color: transparent;
+  min-height: 30px;
+  border: 1px solid #337ab7;
+  border-radius: 5px;
+  color: #337ab7;
+}
+.item-per-page-dropdown:hover {
+  cursor: pointer;
+}
+/* END ITEMS PER PAGE DROPDOWN CSS */
 </style>
 
 <script>
 import Spinner from "vue-simple-spinner";
 import { DataTable } from "v-datatable-light";
 import orderBy from "lodash.orderby";
-// import { mapState, mapGetters } from "vuex";
-import store from "../store/store.js";
-import axios from "axios";
+import PromotionDetailsEditModal from "./PromotionDetailsEditModal.vue";
+import PromotionDetailsCreateModal from "./PromotionDetailsCreateModal.vue";
 
 const initialData = [
   {
-    clubName: "Jockey Club",
-    clubId: "123123"
+    promotionImage: null,
+    promotionText: "Lin"
   },
   {
-    clubName: "Super Club",
-    clubId: "3232323"
+    promotionImage: null,
+    promotionText: "Werner"
   },
   {
-    clubName: "Swimming Club",
-    clubId: "00222"
+    promotionImage: null,
+    promotionText: "Griffiths"
+  },
+  {
+    promotionImage: null,
+    promotionText: "Tucker"
+  },
+  {
+    promotionImage: null,
+    promotionText: "Piper"
+  },
+  {
+    promotionImage: null,
+    promotionText: "Schultz"
   }
 ];
 
@@ -149,32 +250,23 @@ export default {
     // Pagination,
     Spinner
   },
-  mounted() {
-    // if (this.$store.state.isLoggedIn == false) {
-    //   this.$router.push("/login");
-    //   console.log("please login");
-    // }
-    // TODO: for development disable redirect
-    this.fetchClubInfoOfMember();
-  },
   data: function() {
     return {
-      fetchedData: null,
       headerFields: [
         // "__slot:checkboxes",
         {
-          name: "clubName",
-          label: "Club Name",
+          name: "promotionImage",
+          label: "Promotion Image",
           sortable: true
         },
         {
-          name: "clubId",
-          label: "Club ID",
+          name: "promotionText",
+          label: "Promotion Text",
           sortable: true
-        }
-        // ,
-        // "__slot:actions"
+        },
+        "__slot:actions"
       ],
+      data: initialData.slice(0, 10),
       datatableCss: {
         table: "table table-bordered table-hover table-striped table-center",
         th: "header-item",
@@ -198,7 +290,7 @@ export default {
       },
       isLoading: false,
       sort: "asc",
-      sortField: "clubName",
+      sortField: "firstName",
       listItemsPerPage: [5, 10, 20, 50, 100],
       itemsPerPage: 10,
       currentPage: 1,
@@ -206,19 +298,43 @@ export default {
     };
   },
   methods: {
-    async fetchClubInfoOfMember() {
-      let fetchClubInfoAPI = "http://localhost:9000/api/getmemberInfo";
-      const respondData = await axios.get(fetchClubInfoAPI, {
-        params: {
-          email: store.getters.getLoginId,
-          getClubInfo: true
+    // dtEditClick: props => alert("Click props:" + JSON.stringify(props)),
+    dtEditClick: function(props) {
+      console.log("fuckin" + JSON.stringify(props));
+
+      this.$modal.show(
+        PromotionDetailsEditModal,
+        {
+          promotionImage: props.rowData.promotionImage,
+          promotionText: props.rowData.promotionText
+        },
+        {
+          height: "auto"
+        },
+        {
+          "before-close": event => {
+            console.log("close that shit", event);
+          }
         }
-      });
-      this.fetchedData = respondData.data[0].clubInfo;
+      );
     },
-
-    dtEditClick: props => alert("Click props:" + JSON.stringify(props)),
-
+    dtCreateClick: function() {
+      this.$modal.show(
+        PromotionDetailsCreateModal,
+        {
+          promotionImage: null,
+          promotionText: ""
+        },
+        {
+          height: "auto"
+        },
+        {
+          "before-close": event => {
+            console.log("close that shit", event);
+          }
+        }
+      );
+    },
     dtUpdateSort: function({ sortField, sort }) {
       const sortedData = orderBy(initialData, [sortField], [sort]);
       const start = (this.currentPage - 1) * this.itemsPerPage;

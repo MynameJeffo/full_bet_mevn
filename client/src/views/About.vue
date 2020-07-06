@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>This is pornhub</h1>
+    <h1>This is about</h1>
   </div>
 </template>

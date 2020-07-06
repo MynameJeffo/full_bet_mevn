@@ -1,26 +1,28 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
 import Promotion from "./views/Promotion.vue";
 import Memberinfo from "./views/Memberinfo.vue";
+import MemberInfoAdmin from "./views/admin/Memberinfo.vue";
+import PromotionAdmin from "./views/admin/Promotion.vue";
 import Login from "./views/Login.vue";
+import Register from "./views/Register.vue";
 
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  // mode: "history",
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: "/fuckyou",
-      name: "home",
-      component: Home
-    },
-    {
-      path: "/fuckoff",
-      name: "about",
-      component: () => import("./views/About.vue")
-    },
+    // {
+    //   path: "/fuckyou",
+    //   name: "home",
+    //   component: Home
+    // },
+    // {
+    //   path: "/fuckoff",
+    //   name: "about",
+    //   component: () => import("./views/About.vue")
+    // },
     {
       path: "/promotion",
       alias: "/",
@@ -36,6 +38,21 @@ export default new Router({
       path: "/login",
       name: "login",
       component: Login
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: Register
+    },
+    {
+      path: "/admin/memberinfo",
+      name: "memberInfoAdmin",
+      component: MemberInfoAdmin
+    },
+    {
+      path: "/admin/promotion",
+      name: "promotionAdmin",
+      component: PromotionAdmin
     }
   ]
 });
